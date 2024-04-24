@@ -1,22 +1,15 @@
 package two
 
-import groovy.transform.Immutable
-import common.Book
+import groovy.transform.EqualsAndHashCode
+import groovy.transform.TupleConstructor
 
-@Immutable(allProperties = true)
-class PrintedBook implements Book, CanEqual {
-    int pages
-
-    boolean canEqual(other) {
-        other in PrintedBook || other in AudioBook
-    }
+@EqualsAndHashCode(callSuper = true, useCanEqual = false)
+@TupleConstructor(callSuper = true, includeSuperProperties = true)
+class PrintedBook extends Book implements CanEqual {
+    final int pages
+    final int year
 
     boolean equals(other) {
-        switch (other) {
-            case PrintedBook -> this._equals(other)
-            case AudioBook -> this.author == other.author &&
-                this.title == other.title
-            default -> false
-        }
+        other in PrintedBook ? _equals(other) : super.equals(other)
     }
 }
